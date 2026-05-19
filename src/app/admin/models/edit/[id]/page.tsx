@@ -11,11 +11,12 @@ export default function EditModelPage() {
   const [model, setModel] = useState<ModelAsset | null>(null);
 
   useEffect(() => {
-    const models = getStoredModels();
-    const found = models.find(m => m.id === id);
-    if (found) {
-      setModel(found);
-    }
+    getStoredModels().then(models => {
+      const found = models.find(m => m.id === id);
+      if (found) {
+        setModel(found);
+      }
+    });
   }, [id]);
 
   if (!model) return <div>Loading...</div>;

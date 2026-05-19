@@ -14,6 +14,7 @@ interface ProductFormProps {
 
 export default function ProductForm({ initialData, onSubmit, title }: ProductFormProps) {
   const router = useRouter();
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState<Product>(initialData || {
     id: `p${Date.now()}`,
     title: "",
@@ -175,20 +176,34 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
                     id="file-upload"
                     type="file" 
                     accept="image/*,video/*"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setFormData(prev => ({ ...prev, image: reader.result as string }));
-                        };
-                        reader.readAsDataURL(file);
+                        setIsUploading(true);
+                        const uploadData = new FormData();
+                        uploadData.append("file", file);
+                        try {
+                          const res = await fetch("/api/upload", {
+                            method: "POST",
+                            body: uploadData
+                          });
+                          const data = await res.json();
+                          if (data.url) {
+                            setFormData(prev => ({ ...prev, image: data.url }));
+                          }
+                        } catch (err) {
+                          console.error("Upload error:", err);
+                        } finally {
+                          setIsUploading(false);
+                        }
                       }
                     }}
                     style={{ display: "none" }}
                   />
                 </div>
-                <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)" }}>Click "Choose File" to upload directly from your computer (Images or Videos).</p>
+                <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.3)" }}>
+                  {isUploading ? "Uploading file to Cloud Storage..." : "Click 'Choose File' to upload directly from your computer (Images or Videos)."}
+                </p>
               </div>
             </div>
 
@@ -206,7 +221,7 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
                 justifyContent: "center"
               }}>
                 {formData.image ? (
-                  formData.image.startsWith('data:video') ? (
+                  formData.image.startsWith('data:video') || formData.image.includes('.mp4') ? (
                     <video src={formData.image} autoPlay muted loop style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     <img src={formData.image} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -222,26 +237,27 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
         <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
           <button
             type="submit"
+            disabled={isUploading}
             style={{
               flexGrow: 1,
               padding: "1.1rem",
-              backgroundColor: "var(--color-accent-blue)",
+              backgroundColor: isUploading ? "rgba(255,255,255,0.1)" : "var(--color-accent-blue)",
               border: "none",
               borderRadius: "12px",
-              color: "black",
+              color: isUploading ? "rgba(255,255,255,0.3)" : "black",
               fontWeight: 700,
               fontSize: "1rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: "0.75rem",
-              cursor: "pointer",
+              cursor: isUploading ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
-              boxShadow: "0 10px 20px rgba(0, 210, 255, 0.2)"
+              boxShadow: isUploading ? "none" : "0 10px 20px rgba(0, 210, 255, 0.2)"
             }}
           >
             <Save size={20} />
-            Save Product
+            {isUploading ? "Uploading Assets..." : "Save Product"}
           </button>
         </div>
       </form>

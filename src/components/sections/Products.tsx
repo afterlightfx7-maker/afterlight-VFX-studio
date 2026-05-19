@@ -231,8 +231,8 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    // Load products from our "Mock Database" (Local Storage)
-    setProducts(getStoredProducts());
+    // Load products from our database
+    getStoredProducts().then(data => setProducts(data));
   }, []);
 
   // Prevent scrolling when lightbox is open

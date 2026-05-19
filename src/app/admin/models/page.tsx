@@ -21,13 +21,13 @@ export default function AdminModels() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setModels(getStoredModels());
+    getStoredModels().then(data => setModels(data));
     setMounted(true);
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this 3D asset?")) {
-      const updated = deleteModel(id);
+      const updated = await deleteModel(id);
       setModels(updated);
     }
   };

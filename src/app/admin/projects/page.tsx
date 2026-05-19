@@ -22,13 +22,13 @@ export default function AdminProjects() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setProjects(getStoredProjects());
+    getStoredProjects().then(data => setProjects(data));
     setMounted(true);
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this project?")) {
-      const updated = deleteProject(id);
+      const updated = await deleteProject(id);
       setProjects(updated);
     }
   };

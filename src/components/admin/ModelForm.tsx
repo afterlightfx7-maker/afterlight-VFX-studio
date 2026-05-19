@@ -14,6 +14,7 @@ interface ModelFormProps {
 
 export default function ModelForm({ initialData, onSubmit, title }: ModelFormProps) {
   const router = useRouter();
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState<ModelAsset>(initialData || {
     id: `m${Date.now()}`,
     name: "",
@@ -195,50 +196,70 @@ export default function ModelForm({ initialData, onSubmit, title }: ModelFormPro
               id="model-upload"
               type="file" 
               accept=".glb,.gltf"
-              onChange={(e) => {
+              onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  // For demo, we just show the filename
-                  setFormData(prev => ({ ...prev, modelUrl: file.name }));
-                  alert("File ready! (Real 3D file uploads will be connected to Cloud Storage in the next phase)");
+                  setIsUploading(true);
+                  const uploadData = new FormData();
+                  uploadData.append("file", file);
+                  try {
+                    const res = await fetch("/api/upload", {
+                      method: "POST",
+                      body: uploadData
+                    });
+                    const data = await res.json();
+                    if (data.url) {
+                      setFormData(prev => ({ ...prev, modelUrl: data.url }));
+                    }
+                  } catch (err) {
+                    console.error("Upload error:", err);
+                  } finally {
+                    setIsUploading(false);
+                  }
                 }
               }}
               style={{ display: "none" }}
             />
             {formData.modelUrl && (
-              <p style={{ marginTop: "1rem", fontSize: "0.8rem", color: "var(--color-accent-blue)" }}>
-                Selected: {formData.modelUrl}
+              <p style={{ marginTop: "1rem", fontSize: "0.8rem", color: "var(--color-accent-blue)", wordBreak: "break-all" }}>
+                Active URL: {formData.modelUrl}
+              </p>
+            )}
+            {isUploading && (
+              <p style={{ marginTop: "1rem", fontSize: "0.8rem", color: "var(--color-accent-gold)" }}>
+                Uploading 3D Model to Cloud Storage...
               </p>
             )}
           </div>
           <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.2)", textAlign: "center" }}>
-            ⚠️ 3D files are large. High-fidelity uploads require professional cloud storage.
+            ⚠️ 3D models require secure Cloud Storage hosting for real-time WebGL rendering.
           </p>
         </section>
 
         <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
           <button
             type="submit"
+            disabled={isUploading}
             style={{
               flexGrow: 1,
               padding: "1.1rem",
-              backgroundColor: "var(--color-accent-blue)",
+              backgroundColor: isUploading ? "rgba(255,255,255,0.1)" : "var(--color-accent-blue)",
               border: "none",
               borderRadius: "12px",
-              color: "black",
+              color: isUploading ? "rgba(255,255,255,0.3)" : "black",
               fontWeight: 700,
               fontSize: "1rem",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               gap: "0.75rem",
-              cursor: "pointer",
+              cursor: isUploading ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
-              boxShadow: "0 10px 20px rgba(0, 210, 255, 0.2)"
+              boxShadow: isUploading ? "none" : "0 10px 20px rgba(0, 210, 255, 0.2)"
             }}
           >
             <Save size={20} />
-            Save 3D Asset
+            {isUploading ? "Uploading Model..." : "Save 3D Asset"}
           </button>
         </div>
       </form>

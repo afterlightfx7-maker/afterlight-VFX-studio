@@ -11,11 +11,12 @@ export default function EditProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    const products = getStoredProducts();
-    const found = products.find(p => p.id === id);
-    if (found) {
-      setProduct(found);
-    }
+    getStoredProducts().then(products => {
+      const found = products.find(p => p.id === id);
+      if (found) {
+        setProduct(found);
+      }
+    });
   }, [id]);
 
   if (!product) return <div>Loading...</div>;

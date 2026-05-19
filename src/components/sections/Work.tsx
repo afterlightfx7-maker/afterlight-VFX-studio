@@ -13,7 +13,7 @@ export default function Work() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
-    setProjects(getStoredProjects());
+    getStoredProjects().then(data => setProjects(data));
   }, []);
 
   const filteredProjects = projects.filter(p => 

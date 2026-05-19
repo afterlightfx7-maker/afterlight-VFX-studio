@@ -19,13 +19,13 @@ export default function AdminDashboard() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setProducts(getStoredProducts());
+    getStoredProducts().then(data => setProducts(data));
     setMounted(true);
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      const updated = deleteProduct(id);
+      const updated = await deleteProduct(id);
       setProducts(updated);
     }
   };

@@ -11,11 +11,12 @@ export default function EditProjectPage() {
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
-    const projects = getStoredProjects();
-    const found = projects.find(p => p.id === id);
-    if (found) {
-      setProject(found);
-    }
+    getStoredProjects().then(projects => {
+      const found = projects.find(p => p.id === id);
+      if (found) {
+        setProject(found);
+      }
+    });
   }, [id]);
 
   if (!project) return <div>Loading...</div>;

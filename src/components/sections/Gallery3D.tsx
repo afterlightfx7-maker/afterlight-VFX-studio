@@ -120,7 +120,7 @@ export default function Gallery3D() {
   const [models, setModels] = useState<ModelAsset[]>([]);
 
   useEffect(() => {
-    setModels(getStoredModels());
+    getStoredModels().then(data => setModels(data));
   }, []);
 
   return (
