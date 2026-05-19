@@ -229,10 +229,14 @@ function ProductCard({ product, index, onImageClick }: { product: Product, index
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Load products from our database
-    getStoredProducts().then(data => setProducts(data));
+    getStoredProducts().then(data => {
+      setProducts(data);
+      setIsLoading(false);
+    });
   }, []);
 
   // Prevent scrolling when lightbox is open
@@ -285,9 +289,18 @@ export default function Products() {
         position: "relative",
         zIndex: 10
       }}>
-        {products.map((product, i) => (
-          <ProductCard key={product.id} product={product} index={i} onImageClick={setSelectedProduct} />
-        ))}
+        {isLoading ? (
+          Array(3).fill(0).map((_, i) => (
+            <div key={`skeleton-${i}`} style={{ height: "450px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: "-100%", width: "50%", height: "100%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)", animation: "shimmer 1.5s infinite" }} />
+              <style>{`@keyframes shimmer { 100% { left: 200%; } }`}</style>
+            </div>
+          ))
+        ) : (
+          products.map((product, i) => (
+            <ProductCard key={product.id} product={product} index={i} onImageClick={setSelectedProduct} />
+          ))
+        )}
       </div>
 
       {/* Floating background elements for premium feel */}

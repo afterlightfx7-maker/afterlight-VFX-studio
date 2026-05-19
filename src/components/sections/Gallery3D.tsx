@@ -118,9 +118,13 @@ function ModelCard({ model, index }: { model: ModelAsset, index: number }) {
 
 export default function Gallery3D() {
   const [models, setModels] = useState<ModelAsset[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getStoredModels().then(data => setModels(data));
+    getStoredModels().then(data => {
+      setModels(data);
+      setIsLoading(false);
+    });
   }, []);
 
   return (
@@ -160,9 +164,18 @@ export default function Gallery3D() {
         gap: "3rem",
         minHeight: "600px"
       }}>
-        {models.map((model, i) => (
-          <ModelCard key={model.id} model={model} index={i} />
-        ))}
+        {isLoading ? (
+          Array(2).fill(0).map((_, i) => (
+            <div key={`skeleton-${i}`} style={{ height: "600px", borderRadius: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: "-100%", width: "50%", height: "100%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)", animation: "shimmer 1.5s infinite" }} />
+              <style>{`@keyframes shimmer { 100% { left: 200%; } }`}</style>
+            </div>
+          ))
+        ) : (
+          models.map((model, i) => (
+            <ModelCard key={model.id} model={model} index={i} />
+          ))
+        )}
       </div>
     </section>
   );
