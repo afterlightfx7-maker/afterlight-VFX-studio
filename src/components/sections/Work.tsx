@@ -126,7 +126,7 @@ export default function Work() {
                 }}>
                   {project.mediaType === "video" ? (
                     <video 
-                      src={project.mediaSrc} 
+                      src={project.mediaSrc?.includes("cloudinary.com") ? project.mediaSrc.replace("/upload/", "/upload/f_auto,q_auto/") : project.mediaSrc} 
                       autoPlay={hoveredId === project.id} 
                       muted 
                       loop 
@@ -135,9 +135,10 @@ export default function Work() {
                     />
                   ) : (
                     <Image 
-                      src={project.mediaSrc} 
+                      src={project.mediaSrc?.includes("cloudinary.com") ? project.mediaSrc.replace("/upload/", "/upload/f_auto,q_auto,w_1200/") : project.mediaSrc} 
                       alt={project.title} 
                       fill 
+                      unoptimized={true}
                       style={{ objectFit: "cover" }}
                     />
                   )}

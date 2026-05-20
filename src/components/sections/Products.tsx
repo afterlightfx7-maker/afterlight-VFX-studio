@@ -73,9 +73,9 @@ function ProductCard({ product, index, onImageClick }: { product: Product, index
       >
         {/* Render Image, Video or Placeholder */}
         {product.image ? (
-          product.image.startsWith('data:video') ? (
+          product.image.startsWith('data:video') || (product.image.includes("cloudinary.com") && product.image.includes("/video/upload/")) ? (
             <video 
-              src={product.image} 
+              src={product.image.includes("cloudinary.com") ? product.image.replace("/upload/", "/upload/f_auto,q_auto/") : product.image} 
               autoPlay 
               muted 
               loop 
@@ -85,7 +85,7 @@ function ProductCard({ product, index, onImageClick }: { product: Product, index
             />
           ) : (
             <img 
-              src={product.image} 
+              src={product.image.includes("cloudinary.com") ? product.image.replace("/upload/", "/upload/f_auto,q_auto,w_800/") : product.image} 
               alt={product.title} 
               style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
               className="product-img"
@@ -396,11 +396,22 @@ export default function Products() {
             >
               {/* Fullscreen Content */}
               {selectedProduct.image ? (
-                <img 
-                  src={selectedProduct.image} 
-                  alt={selectedProduct.title} 
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+                selectedProduct.image.startsWith('data:video') || (selectedProduct.image.includes("cloudinary.com") && selectedProduct.image.includes("/video/upload/")) ? (
+                  <video 
+                    src={selectedProduct.image.includes("cloudinary.com") ? selectedProduct.image.replace("/upload/", "/upload/f_auto,q_auto/") : selectedProduct.image} 
+                    autoPlay 
+                    muted 
+                    loop 
+                    playsInline
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <img 
+                    src={selectedProduct.image.includes("cloudinary.com") ? selectedProduct.image.replace("/upload/", "/upload/f_auto,q_auto,w_1920/") : selectedProduct.image} 
+                    alt={selectedProduct.title} 
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                )
               ) : (
                 <div style={{ textAlign: "center", color: "var(--color-text-muted)" }}>
                   <Maximize2 size={48} style={{ opacity: 0.2, margin: "0 auto 1.5rem" }} />
