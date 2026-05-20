@@ -9,6 +9,7 @@ import {
   Package, 
   FolderOpen,
   Box,
+  Film,
   Settings, 
   LogOut, 
   ChevronRight,
@@ -48,6 +49,7 @@ export default function AdminLayout({
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Projects", href: "/admin/projects", icon: FolderOpen },
     { name: "3D Assets", href: "/admin/models", icon: Box },
+    { name: "Showreel", href: "/admin/showreel", icon: Film },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 

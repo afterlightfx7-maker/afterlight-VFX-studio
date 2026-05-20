@@ -2,17 +2,24 @@
 
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-interface ShowreelProps {
-  // Pass your actual video path here later, e.g., "/videos/main-reel.mp4"
-  videoSrc?: string; 
-}
-
-export default function Showreel({ videoSrc }: ShowreelProps) {
+export default function Showreel() {
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoSrc, setVideoSrc] = useState("");
+  const [reelTitle, setReelTitle] = useState("AFTERLIGHTFX REEL 2026");
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    fetch("/api/showreel")
+      .then(res => res.json())
+      .then(data => {
+        if (data.videoUrl) setVideoSrc(data.videoUrl);
+        if (data.title) setReelTitle(data.title);
+      })
+      .catch(() => {});
+  }, []);
 
   const handlePlayClick = () => {
     if (videoRef.current) {
@@ -120,7 +127,7 @@ export default function Showreel({ videoSrc }: ShowreelProps) {
           opacity: isPlaying && !isHovered ? 0 : 1,
           transition: "opacity 0.3s ease"
         }}>
-          <h2 style={{ fontSize: "2rem", margin: 0 }}>AFTERLIGHTFX REEL 2026</h2>
+          <h2 style={{ fontSize: "2rem", margin: 0 }}>{reelTitle}</h2>
           <p style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-primary)", textTransform: "uppercase", letterSpacing: "0.1em", fontSize: "0.8rem", marginTop: "0.5rem" }}>
             Press play to immerse
           </p>
