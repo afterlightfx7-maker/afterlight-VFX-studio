@@ -217,9 +217,12 @@ export default function ProjectForm({ initialData, onSubmit, title }: ProjectFor
                           const data = await res.json();
                           if (data.url) {
                             setFormData(prev => ({ ...prev, mediaSrc: data.url }));
+                          } else {
+                            alert(`Upload failed: ${data.error || "File might exceed Vercel's 4.5MB limit."}`);
                           }
                         } catch (err) {
                           console.error("Upload error:", err);
+                          alert("Upload failed completely. The file is likely larger than the Vercel 4.5MB limit.");
                         } finally {
                           setIsUploading(false);
                         }
