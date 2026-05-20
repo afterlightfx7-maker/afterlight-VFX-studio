@@ -8,7 +8,7 @@ import { Product } from "@/data/products";
 
 interface ProductFormProps {
   initialData?: Product;
-  onSubmit: (data: Product) => void;
+  onSubmit: (data: Product) => Promise<any> | void;
   title: string;
 }
 
@@ -28,10 +28,16 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    router.push("/admin/products");
+    setIsUploading(true);
+    try {
+      await onSubmit(formData);
+      router.refresh();
+      router.push("/admin/products");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (

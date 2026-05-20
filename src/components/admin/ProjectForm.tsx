@@ -8,7 +8,7 @@ import { Project } from "@/data/projects";
 
 interface ProjectFormProps {
   initialData?: Project;
-  onSubmit: (data: Project) => void;
+  onSubmit: (data: Project) => Promise<any> | void;
   title: string;
 }
 
@@ -30,10 +30,16 @@ export default function ProjectForm({ initialData, onSubmit, title }: ProjectFor
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    router.push("/admin/projects");
+    setIsUploading(true);
+    try {
+      await onSubmit(formData);
+      router.refresh();
+      router.push("/admin/projects");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (

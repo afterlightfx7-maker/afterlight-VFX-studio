@@ -8,7 +8,7 @@ import { ModelAsset } from "@/data/models";
 
 interface ModelFormProps {
   initialData?: ModelAsset;
-  onSubmit: (data: ModelAsset) => void;
+  onSubmit: (data: ModelAsset) => Promise<any> | void;
   title: string;
 }
 
@@ -30,10 +30,16 @@ export default function ModelForm({ initialData, onSubmit, title }: ModelFormPro
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
-    router.push("/admin/models");
+    setIsUploading(true);
+    try {
+      await onSubmit(formData);
+      router.refresh();
+      router.push("/admin/models");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
