@@ -75,7 +75,7 @@ function ProductCard({ product, index, onImageClick }: { product: Product, index
         {product.image ? (
           product.image.startsWith('data:video') || (product.image.includes("cloudinary.com") && product.image.includes("/video/upload/")) ? (
             <video 
-              src={product.image.includes("cloudinary.com") ? product.image.replace("/upload/", "/upload/f_auto,q_auto/") : product.image} 
+              src={product.image} 
               autoPlay 
               muted 
               loop 
@@ -398,7 +398,7 @@ export default function Products() {
               {selectedProduct.image ? (
                 selectedProduct.image.startsWith('data:video') || (selectedProduct.image.includes("cloudinary.com") && selectedProduct.image.includes("/video/upload/")) ? (
                   <video 
-                    src={selectedProduct.image.includes("cloudinary.com") ? selectedProduct.image.replace("/upload/", "/upload/f_auto,q_auto/") : selectedProduct.image} 
+                    src={selectedProduct.image} 
                     autoPlay 
                     muted 
                     loop 

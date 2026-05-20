@@ -126,7 +126,7 @@ export default function Work() {
                 }}>
                   {project.mediaType === "video" ? (
                     <video 
-                      src={project.mediaSrc?.includes("cloudinary.com") ? project.mediaSrc.replace("/upload/", "/upload/f_auto,q_auto/") : project.mediaSrc} 
+                      src={project.mediaSrc} 
                       autoPlay={hoveredId === project.id} 
                       muted 
                       loop 
