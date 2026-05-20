@@ -36,11 +36,13 @@ export default function ModelForm({ initialData, onSubmit, title }: ModelFormPro
     try {
       await onSubmit(formData);
       router.refresh();
+      await new Promise(resolve => setTimeout(resolve, 500));
       router.push("/admin/models");
     } finally {
       setIsUploading(false);
     }
   };
+
 
   return (
     <div style={{ maxWidth: "800px" }}>

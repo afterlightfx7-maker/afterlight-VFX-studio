@@ -36,11 +36,14 @@ export default function ProjectForm({ initialData, onSubmit, title }: ProjectFor
     try {
       await onSubmit(formData);
       router.refresh();
+      // Small delay so DB write fully completes before list reloads
+      await new Promise(resolve => setTimeout(resolve, 500));
       router.push("/admin/projects");
     } finally {
       setIsUploading(false);
     }
   };
+
 
   return (
     <div style={{ maxWidth: "800px" }}>

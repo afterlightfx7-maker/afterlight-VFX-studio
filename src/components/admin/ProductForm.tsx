@@ -34,11 +34,13 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
     try {
       await onSubmit(formData);
       router.refresh();
+      await new Promise(resolve => setTimeout(resolve, 500));
       router.push("/admin/products");
     } finally {
       setIsUploading(false);
     }
   };
+
 
   return (
     <div style={{ maxWidth: "800px" }}>

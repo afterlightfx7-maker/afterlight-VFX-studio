@@ -21,9 +21,15 @@ export default function AdminProducts() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    getStoredProducts().then(data => setProducts(data));
+    const load = () => {
+      getStoredProducts().then(data => setProducts(data));
+    };
+    load();
     setMounted(true);
+    window.addEventListener("focus", load);
+    return () => window.removeEventListener("focus", load);
   }, []);
+
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this product?")) {

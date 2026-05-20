@@ -22,9 +22,16 @@ export default function AdminProjects() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    getStoredProjects().then(data => setProjects(data));
+    const load = () => {
+      getStoredProjects().then(data => setProjects(data));
+    };
+    load();
     setMounted(true);
+    // Re-fetch when user returns to this tab (e.g. after saving a project)
+    window.addEventListener("focus", load);
+    return () => window.removeEventListener("focus", load);
   }, []);
+
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this project?")) {

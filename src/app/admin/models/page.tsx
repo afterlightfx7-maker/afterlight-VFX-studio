@@ -21,9 +21,15 @@ export default function AdminModels() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    getStoredModels().then(data => setModels(data));
+    const load = () => {
+      getStoredModels().then(data => setModels(data));
+    };
+    load();
     setMounted(true);
+    window.addEventListener("focus", load);
+    return () => window.removeEventListener("focus", load);
   }, []);
+
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this 3D asset?")) {
