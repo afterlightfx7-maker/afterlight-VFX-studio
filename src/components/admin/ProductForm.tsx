@@ -186,22 +186,41 @@ export default function ProductForm({ initialData, onSubmit, title }: ProductFor
                       const file = e.target.files?.[0];
                       if (file) {
                         setIsUploading(true);
-                        const uploadData = new FormData();
-                        uploadData.append("file", file);
                         try {
-                          const res = await fetch("/api/upload", {
-                            method: "POST",
-                            body: uploadData
-                          });
-                          const data = await res.json();
-                          if (data.url) {
-                            setFormData(prev => ({ ...prev, image: data.url }));
+                          const sigRes = await fetch("/api/upload");
+                          const sigData = await sigRes.json();
+
+                          if (sigData.fallback) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setFormData(prev => ({ ...prev, image: reader.result as string }));
+                              setIsUploading(false);
+                            };
+                            reader.readAsDataURL(file);
+                            return;
+                          }
+
+                          const uploadData = new FormData();
+                          uploadData.append("file", file);
+                          uploadData.append("api_key", sigData.apiKey);
+                          uploadData.append("timestamp", sigData.timestamp);
+                          uploadData.append("signature", sigData.signature);
+                          uploadData.append("folder", "afterlight_studio");
+
+                          const uploadRes = await fetch(
+                            `https://api.cloudinary.com/v1_1/${sigData.cloudName}/auto/upload`,
+                            { method: "POST", body: uploadData }
+                          );
+                          const uploadResult = await uploadRes.json();
+
+                          if (uploadResult.secure_url) {
+                            setFormData(prev => ({ ...prev, image: uploadResult.secure_url }));
                           } else {
-                            alert(`Upload failed: ${data.error || "File might exceed Vercel's 4.5MB limit."}`);
+                            alert(`Cloudinary Upload failed: ${uploadResult.error?.message || "Unknown error"}`);
                           }
                         } catch (err) {
                           console.error("Upload error:", err);
-                          alert("Upload failed completely. The file is likely larger than the Vercel 4.5MB limit.");
+                          alert("Upload failed completely. Check your connection.");
                         } finally {
                           setIsUploading(false);
                         }
