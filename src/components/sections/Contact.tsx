@@ -9,17 +9,21 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const data = new FormData(form);
+    const formData = new FormData(form);
+    
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const message = formData.get("message") as string;
     
     setStatus("sending");
     
     try {
-      const response = await fetch("https://formspree.io/f/maypgeow", { // I'll use a placeholder or tell user how to get their ID
+      const response = await fetch("/api/inquiry", {
         method: "POST",
-        body: data,
         headers: {
-          'Accept': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
       });
       
       if (response.ok) {
@@ -82,8 +86,8 @@ export default function Contact() {
             </motion.p>
             
             <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-              <a href="mailto:afterlightfx7@gmail.com" style={{ fontSize: "1.5rem", fontFamily: "var(--font-display)", fontWeight: 700, transition: "color 0.3s ease", color: "var(--color-text)" }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-accent-blue)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text)'}>
-                afterlightfx7@gmail.com
+              <a href="mailto:contact@afterlightfx.com" style={{ fontSize: "1.5rem", fontFamily: "var(--font-display)", fontWeight: 700, transition: "color 0.3s ease", color: "var(--color-text)" }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-accent-blue)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text)'}>
+                contact@afterlightfx.com
               </a>
               <div style={{ color: "var(--color-text-muted)" }}>
                 Available Worldwide
