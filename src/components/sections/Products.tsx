@@ -282,13 +282,7 @@ export default function Products() {
         </motion.p>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-        gap: "3rem",
-        position: "relative",
-        zIndex: 10
-      }}>
+      <div className="products-grid" style={{ position: "relative", zIndex: 10 }}>
         {isLoading ? (
           Array(3).fill(0).map((_, i) => (
             <div key={`skeleton-${i}`} style={{ height: "450px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
@@ -378,20 +372,7 @@ export default function Products() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              style={{
-                width: "100%",
-                maxWidth: "1200px",
-                aspectRatio: "16/9",
-                background: "linear-gradient(135deg, #111, #050505)",
-                borderRadius: "16px",
-                border: "1px solid rgba(255,255,255,0.1)",
-                boxShadow: "0 30px 60px -15px rgba(0,0,0,0.8)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                position: "relative",
-                overflow: "hidden"
-              }}
+              className="product-lightbox-content"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Fullscreen Content */}

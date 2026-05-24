@@ -139,11 +139,7 @@ export default function Services() {
         </motion.h2>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-        gap: "2rem"
-      }}>
+      <div className="services-grid">
         {services.map((service, i) => (
           <ServiceCard key={service.id} service={service} index={i} />
         ))}

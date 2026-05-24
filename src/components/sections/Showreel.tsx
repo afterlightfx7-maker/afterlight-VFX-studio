@@ -33,18 +33,9 @@ export default function Showreel() {
   };
 
   return (
-    <section className="section" style={{ padding: "0 2rem", position: "relative" }}>
+    <section className="section showreel-wrapper" style={{ padding: "0 2rem", position: "relative" }}>
       <div 
-        style={{ 
-          maxWidth: "1400px", 
-          margin: "0 auto", 
-          borderRadius: "1rem", 
-          overflow: "hidden",
-          position: "relative",
-          aspectRatio: "21/9",
-          backgroundColor: "#0a0a0c",
-          border: "1px solid var(--color-border)",
-        }}
+        className="showreel-container"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

@@ -39,13 +39,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section container" style={{ paddingBottom: "0" }}>
-      <div className="glass" style={{
-        padding: "6rem 4rem",
-        borderRadius: "24px 24px 0 0",
-        borderBottom: "none",
-        position: "relative",
-        overflow: "hidden"
-      }}>
+      <div className="glass contact-card-container">
         <div style={{
           position: "absolute",
           top: 0,
@@ -56,7 +50,7 @@ export default function Contact() {
           opacity: 0.5
         }} />
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4rem" }}>
+        <div className="contact-grid">
           <div>
             <motion.span 
               initial={{ opacity: 0 }}

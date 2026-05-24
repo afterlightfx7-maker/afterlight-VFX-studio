@@ -10,8 +10,8 @@ const stats = [
 
 export default function About() {
   return (
-    <section id="about" className="section container" style={{ position: "relative", padding: "10rem 0" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "center" }}>
+    <section id="about" className="section container about-section">
+      <div className="about-grid">
         
         <div>
           <motion.span 
@@ -72,13 +72,7 @@ export default function About() {
             zIndex: 0
           }} />
           
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "2rem",
-            position: "relative",
-            zIndex: 1
-          }}>
+          <div className="about-stats-grid">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}

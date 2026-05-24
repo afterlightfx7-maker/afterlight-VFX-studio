@@ -26,7 +26,7 @@ export default function Work() {
 
   return (
     <section id="work" className="section container">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4rem" }}>
+      <div className="work-header" style={{ marginBottom: "4rem" }}>
         <div>
           <motion.span 
             initial={{ opacity: 0 }}
@@ -41,7 +41,7 @@ export default function Work() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            style={{ fontSize: "clamp(2rem, 4vw, 4rem)", margin: "1rem 0 0" }}
+            style={{ fontSize: "clamp(2.5rem, 4vw, 4rem)", margin: "1rem 0 0" }}
           >
             Featured <span className="text-gradient">Projects</span>
           </motion.h2>
@@ -69,27 +69,20 @@ export default function Work() {
         </div>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(12, 1fr)",
-        gap: "1.5rem",
-        gridAutoRows: "minmax(300px, auto)"
-      }}>
+      <div className="work-grid">
         {isLoading ? (
           Array(4).fill(0).map((_, i) => (
-            <div key={`skeleton-${i}`} style={{ gridColumn: i === 0 || i === 3 ? "span 8" : "span 4", height: "400px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
+            <div key={`skeleton-${i}`} className={`project-card-wrapper ${i === 0 || i === 3 ? "project-grid-span-8" : "project-grid-span-4"}`} style={{ height: "400px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: "-100%", width: "50%", height: "100%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)", animation: "shimmer 1.5s infinite" }} />
               <style>{`@keyframes shimmer { 100% { left: 200%; } }`}</style>
             </div>
           ))
         ) : (
           filteredProjects.map((project, i) => {
-          let gridColumn = "span 6";
-          let gridRow = "span 1";
-          
-          if (project.size === "large") { gridColumn = "span 8"; gridRow = "span 1"; }
-          if (project.size === "tall") { gridColumn = "span 4"; gridRow = "span 2"; }
-          if (project.size === "small") { gridColumn = "span 4"; gridRow = "span 1"; }
+          let sizeClass = "project-grid-span-6";
+          if (project.size === "large") sizeClass = "project-grid-span-8";
+          if (project.size === "tall") sizeClass = "project-grid-span-4-row-2";
+          if (project.size === "small") sizeClass = "project-grid-span-4";
 
           return (
             <motion.div
@@ -100,9 +93,8 @@ export default function Work() {
               transition={{ duration: 0.8, delay: i * 0.1 }}
               onMouseEnter={() => setHoveredId(project.id)}
               onMouseLeave={() => setHoveredId(null)}
+              className={`project-card-wrapper ${sizeClass}`}
               style={{
-                gridColumn,
-                gridRow,
                 position: "relative",
                 overflow: "hidden",
                 borderRadius: "12px",

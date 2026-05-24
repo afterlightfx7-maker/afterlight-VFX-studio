@@ -21,6 +21,7 @@ function ModelCard({ model, index }: { model: ModelAsset, index: number }) {
       transition={{ duration: 0.8, delay: index * 0.1 }}
       onMouseEnter={() => setHoveredId(model.id)}
       onMouseLeave={() => setHoveredId(null)}
+      className="gallery-model-card"
       style={{ 
         borderRadius: "24px", 
         overflow: "hidden", 
@@ -28,8 +29,7 @@ function ModelCard({ model, index }: { model: ModelAsset, index: number }) {
         position: "relative",
         backgroundColor: "var(--color-bg-secondary)",
         boxShadow: hoveredId === model.id ? `0 20px 40px rgba(0,0,0,0.2)` : "none",
-        transition: "all 0.4s ease",
-        height: "600px"
+        transition: "all 0.4s ease"
       }}
     >
       {/* HUD Overlay */}
@@ -158,12 +158,7 @@ export default function Gallery3D() {
         </motion.p>
       </div>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
-        gap: "3rem",
-        minHeight: "600px"
-      }}>
+      <div className="gallery-grid" style={{ minHeight: "600px" }}>
         {isLoading ? (
           Array(2).fill(0).map((_, i) => (
             <div key={`skeleton-${i}`} style={{ height: "600px", borderRadius: "24px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", position: "relative", overflow: "hidden" }}>

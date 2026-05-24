@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export default function Footer() {
   return (
     <footer style={{ padding: "4rem 0 2rem", borderTop: "1px solid var(--color-border)", position: "relative", zIndex: 10, backgroundColor: "var(--color-bg)" }}>
-      <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+      <div className="container footer-upper-row">
         
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
@@ -55,7 +55,7 @@ export default function Footer() {
 
       </div>
       
-      <div className="container" style={{ display: "flex", justifyContent: "space-between", marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="container footer-lower-row">
         <span style={{ color: "var(--color-text-muted)", fontSize: "0.75rem" }}>
           &copy; {new Date().getFullYear()} AfterLightFX Studios. All rights reserved.
         </span>
