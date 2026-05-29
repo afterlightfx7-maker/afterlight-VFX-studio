@@ -31,7 +31,9 @@ export default function Footer() {
         <div style={{ display: "flex", gap: "2rem" }}>
           {[
             { name: "Instagram", url: "https://www.instagram.com/afterlightfx_studios_?igsh=MXNjc2VmOXB2dXR1Nw%3D%3D&utm_source=qr", target: "_blank" },
-            { name: "LinkedIn", url: "#" }
+            { name: "LinkedIn", url: "#" },
+            { name: "YouTube", url: "https://youtube.com/@afterlightfx?si=4nDNxvtXRVVIUtxJ", target: "_blank" },
+            { name: "Twitter", url: "https://x.com/AfterlightFx", target: "_blank" }
           ].map((social) => (
             <a 
               key={social.name} 
