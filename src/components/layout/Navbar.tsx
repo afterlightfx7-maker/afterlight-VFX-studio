@@ -1,5 +1,4 @@
 "use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -31,9 +30,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: "Services", href: "#services" },
-    { name: "Products", href: "#products" },
     { name: "Work", href: "#work" },
-    { name: "3D Gallery", href: "#gallery3d" },
     { name: "About", href: "#about" },
     { name: "Contact", href: "#contact" }
   ];
@@ -75,7 +72,8 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="desktop-nav" style={{ display: "flex", gap: "1.75rem", alignItems: "center" }}>
+          <nav className="desktop-nav" style={{ display: "flex", gap: "1.75rem", alignItems: "center", marginLeft: "auto" }}>
+
             {navItems.map((item) => (
               <Link 
                 key={item.name} 
@@ -85,43 +83,42 @@ export default function Navbar() {
                   fontSize: "0.85rem",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "var(--color-text-muted)",
+                  color: "rgba(255, 255, 255, 0.75)",
                   position: "relative",
                   padding: "0.5rem 0",
                   transition: "color 0.3s ease"
                 }}
                 className="nav-link"
                 onMouseOver={(e) => e.currentTarget.style.color = 'var(--color-text)'}
-                onMouseOut={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'}
               >
                 {item.name}
               </Link>
             ))}
-            
-            <Link href="#contact" className="btn btn-primary" style={{ padding: "0.6rem 1.25rem", fontSize: "0.75rem", marginLeft: "0.5rem", borderRadius: "4px" }}>
-              Start a Project
-            </Link>
           </nav>
 
-          {/* Mobile Menu Toggle Button */}
-          <button 
-            className="mobile-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            style={{
-              background: "none",
-              border: "none",
-              color: "var(--color-text)",
-              cursor: "pointer",
-              padding: "0.5rem",
-              display: "none",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 101,
-              transition: "transform 0.3s ease"
-            }}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Right Container */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              className="mobile-toggle"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--color-text)",
+                cursor: "pointer",
+                padding: "0.5rem",
+                display: "none",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 101,
+                transition: "transform 0.3s ease"
+              }}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </motion.header>
 
@@ -170,15 +167,6 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              
-              <Link 
-                href="#contact" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="btn btn-primary" 
-                style={{ padding: "0.9rem 2.25rem", fontSize: "0.8rem", marginTop: "1.5rem", borderRadius: "4px" }}
-              >
-                Start a Project
-              </Link>
             </div>
           </motion.div>
         )}
@@ -211,4 +199,3 @@ export default function Navbar() {
     </>
   );
 }
-

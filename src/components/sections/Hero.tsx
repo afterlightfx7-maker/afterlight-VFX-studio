@@ -52,7 +52,7 @@ export default function Hero() {
                 lineHeight: 1.1,
                 letterSpacing: "0.05em",
                 color: "var(--color-text)",
-                textShadow: "0 0 40px rgba(255,255,255,0.1)",
+                textShadow: "0 0 30px rgba(0, 210, 255, 0.6), 0 0 60px rgba(138, 43, 226, 0.4)",
               }}
             >
               AFTERLIGHTFX
@@ -95,7 +95,8 @@ export default function Hero() {
                 fontSize: "clamp(1rem, 2vw, 1.5rem)",
                 letterSpacing: "0.4em",
                 color: "var(--color-text)",
-                textTransform: "uppercase"
+                textTransform: "uppercase",
+                textShadow: "0 0 15px rgba(138, 43, 226, 0.7)"
               }}
             >
               STUDIOS
@@ -103,17 +104,9 @@ export default function Hero() {
           </h1>
         </div>
 
-        {mounted && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 4.2 }}
-            style={{ display: "flex", gap: "1.5rem", justifyContent: "center" }}
-          >
-            <button className="btn btn-primary" style={{ padding: "1.2rem 3rem" }}>View Showreel</button>
-          </motion.div>
-        )}
+
       </div>
+
 
       {/* Floating decorative elements */}
       <motion.div 

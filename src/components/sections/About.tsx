@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 
 const stats = [
   { value: "120+", label: "Projects" },
-  { value: "15+", label: "Awards" },
   { value: "40+", label: "Global Clients" },
 ];
 
@@ -52,14 +51,7 @@ export default function About() {
             Working globally with architects, brands, directors, and agencies who need visuals that don't just look good—they hit different.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          >
-            <button className="btn btn-primary">Discover Our Process</button>
-          </motion.div>
+
         </div>
 
         <div style={{ position: "relative" }}>
@@ -84,8 +76,7 @@ export default function About() {
                 style={{
                   padding: "3rem 2rem",
                   borderRadius: "12px",
-                  textAlign: "center",
-                  gridColumn: i === 2 ? "span 2" : "span 1"
+                  textAlign: "center"
                 }}
               >
                 <div style={{ fontSize: "3rem", fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--color-accent-blue)", marginBottom: "0.5rem" }}>

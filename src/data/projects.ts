@@ -6,6 +6,7 @@ export interface Project {
   mediaType: "image" | "video";
   size: "large" | "tall" | "small";
   bg?: string;
+  galleryImages?: string[];
 }
 
 export const initialProjects: Project[] = [

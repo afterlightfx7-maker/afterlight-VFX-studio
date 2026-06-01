@@ -6,7 +6,8 @@ const ProjectSchema = new Schema({
   mediaSrc: { type: String, default: "" },
   mediaType: { type: String, enum: ["image", "video"], required: true },
   size: { type: String, enum: ["large", "tall", "small"], required: true },
-  bg: { type: String, default: "" }
+  bg: { type: String, default: "" },
+  galleryImages: { type: [String], default: [] }
 }, {
   timestamps: true,
   toJSON: {

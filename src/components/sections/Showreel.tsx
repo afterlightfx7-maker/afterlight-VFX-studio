@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { Play, Volume2, VolumeX } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export default function Showreel() {
   const [isHovered, setIsHovered] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // default to true since we autoplay
+  const [isMuted, setIsMuted] = useState(true); // default to true to allow autoplay
   const [videoSrc, setVideoSrc] = useState("");
   const [reelTitle, setReelTitle] = useState("AFTERLIGHTFX REEL 2026");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -28,7 +29,6 @@ export default function Showreel() {
       } else {
         videoRef.current.play();
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -38,15 +38,19 @@ export default function Showreel() {
         className="showreel-container"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        style={{ position: "relative", overflow: "hidden", borderRadius: "16px", height: "80vh", minHeight: "500px", backgroundColor: "#000" }}
       >
         {/* The Video Element */}
         {videoSrc ? (
           <video 
             ref={videoRef}
             src={videoSrc}
+            autoPlay
             playsInline
             loop
-            muted={false} // Adjust based on your reel
+            muted={isMuted}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
             style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }}
           />
         ) : (
@@ -80,7 +84,8 @@ export default function Showreel() {
           alignItems: "center",
           justifyContent: "center",
           opacity: isHovered || !isPlaying ? 1 : 0,
-          transition: "opacity 0.3s ease"
+          transition: "opacity 0.3s ease",
+          pointerEvents: isHovered || !isPlaying ? "auto" : "none"
         }}>
           <motion.button
             onClick={handlePlayClick}
@@ -107,6 +112,49 @@ export default function Showreel() {
             ) : (
               <Play size={32} fill="currentColor" style={{ marginLeft: "6px" }} />
             )}
+          </motion.button>
+        </div>
+
+        {/* Audio Mute/Unmute Control (Bottom Right) */}
+        <div style={{
+          position: "absolute",
+          bottom: "2rem",
+          right: "3rem",
+          zIndex: 10,
+          opacity: isPlaying && !isHovered ? 0.3 : 1,
+          transition: "opacity 0.3s ease",
+          display: "flex",
+          alignItems: "center"
+        }}>
+          <motion.button
+            onClick={() => setIsMuted(!isMuted)}
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 210, 255, 0.2)" }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "50%",
+              backgroundColor: "rgba(20, 20, 25, 0.6)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              backdropFilter: "blur(8px)",
+              transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)"
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.borderColor = "var(--color-accent-blue)";
+              e.currentTarget.style.boxShadow = "0 0 15px rgba(0, 210, 255, 0.3)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.3)";
+            }}
+          >
+            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </motion.button>
         </div>
 
