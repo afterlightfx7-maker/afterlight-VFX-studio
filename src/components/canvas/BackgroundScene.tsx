@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";
 import { useState, useRef, Suspense } from "react";
 import * as THREE from "three";
@@ -45,89 +45,11 @@ function Starfield() {
   );
 }
 
-// ─── Rotating Earth ───────────────────────────────────────────────────────────
-function Earth() {
-  const earthRef  = useRef<THREE.Mesh>(null!);
-  const cloudsRef = useRef<THREE.Mesh>(null!);
-
-  // Textures from Three.js official CDN (jsDelivr — always available)
-  const [earthMap, cloudsMap, bumpMap] = useLoader(THREE.TextureLoader, [
-    "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_atmos_2048.jpg",
-    "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_clouds_1024.png",
-    "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_normal_2048.jpg",
-  ]);
-
-  useFrame((_state, delta) => {
-    if (earthRef.current)  earthRef.current.rotation.y  += delta * 0.055;
-    if (cloudsRef.current) cloudsRef.current.rotation.y += delta * 0.065;
-  });
-
-  return (
-    // Position: right-centre, partially below viewport for a planet-horizon look
-    <group position={[1.4, -1.1, 0]}>
-      {/* Sun-like directional light from top-left */}
-      <directionalLight position={[-4, 3, 4]} intensity={2.2} color="#e8d8c0" />
-      {/* Faint fill light for the dark side */}
-      <ambientLight intensity={0.08} color="#1a3a6c" />
-
-      {/* ── Earth sphere ── */}
-      <mesh ref={earthRef}>
-        <sphereGeometry args={[1.1, 96, 96]} />
-        <meshStandardMaterial
-          map={earthMap}
-          normalMap={bumpMap}
-          normalScale={new THREE.Vector2(0.08, 0.08)}
-          roughness={0.85}
-          metalness={0.05}
-        />
-      </mesh>
-
-      {/* ── Cloud layer ── */}
-      <mesh ref={cloudsRef}>
-        <sphereGeometry args={[1.115, 96, 96]} />
-        <meshStandardMaterial
-          map={cloudsMap}
-          transparent
-          opacity={0.35}
-          depthWrite={false}
-          roughness={1}
-          metalness={0}
-        />
-      </mesh>
-
-      {/* ── Atmospheric rim glow (BackSide trick) ── */}
-      <mesh>
-        <sphereGeometry args={[1.18, 96, 96]} />
-        <meshBasicMaterial
-          color="#00aaff"
-          transparent
-          opacity={0.07}
-          side={THREE.BackSide}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* ── Outer soft halo ── */}
-      <mesh>
-        <sphereGeometry args={[1.28, 64, 64]} />
-        <meshBasicMaterial
-          color="#0055aa"
-          transparent
-          opacity={0.025}
-          side={THREE.BackSide}
-          depthWrite={false}
-        />
-      </mesh>
-    </group>
-  );
-}
-
 // ─── Scene root ───────────────────────────────────────────────────────────────
 function Scene() {
   return (
     <>
       <Starfield />
-      <Earth />
     </>
   );
 }
