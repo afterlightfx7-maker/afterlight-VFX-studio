@@ -1,13 +1,51 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Images } from "lucide-react";
+import { Images, Video } from "lucide-react";
 
 import { getStoredProjects } from "@/components/utils/adminData";
 import { Project } from "@/data/projects";
 import ProjectGalleryLightbox from "@/components/ui/ProjectGalleryLightbox";
+
+// Programmatic video component to play/pause on hover correctly in React
+function ProjectVideo({ src, isHovered }: { src: string; isHovered: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isHovered) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.log("Video playback prevented:", error);
+        });
+      }
+    } else {
+      video.pause();
+      // Safely reset video to start so it replays from beginning on next hover
+      try {
+        video.currentTime = 0;
+      } catch (e) {
+        // Ignore errors if metadata hasn't loaded yet
+      }
+    }
+  }, [isHovered]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      muted
+      loop
+      playsInline
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  );
+}
 
 export default function Work() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -26,7 +64,7 @@ export default function Work() {
 
   const hasGallery = (project: Project) => {
     const galleryCount = project.galleryImages?.length ?? 0;
-    const hasMain = !!(project.mediaSrc && project.mediaType === "image");
+    const hasMain = !!project.mediaSrc;
     return hasMain || galleryCount > 0;
   };
 
@@ -70,6 +108,11 @@ export default function Work() {
             if (project.size === "tall") sizeClass = "project-grid-span-4-row-2";
             if (project.size === "small") sizeClass = "project-grid-span-4";
 
+            const isVideo = project.mediaType === "video" || 
+                            project.mediaSrc?.includes("/video/") || 
+                            project.mediaSrc?.match(/\.(mp4|webm|ogg|mov|m4v)($|\?)/i) || 
+                            project.mediaSrc?.startsWith("data:video/");
+
             const galleryAvailable = hasGallery(project);
             const isHovered = hoveredId === project.id;
 
@@ -108,15 +151,8 @@ export default function Work() {
                     transform: isHovered ? "scale(1.05)" : "scale(1)",
                     transition: "transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)"
                   }}>
-                    {project.mediaType === "video" ? (
-                      <video 
-                        src={project.mediaSrc} 
-                        autoPlay={isHovered} 
-                        muted 
-                        loop 
-                        playsInline
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
+                    {isVideo ? (
+                      <ProjectVideo src={project.mediaSrc} isHovered={isHovered} />
                     ) : (
                       <Image 
                         src={project.mediaSrc?.includes("cloudinary.com") ? project.mediaSrc.replace("/upload/", "/upload/f_auto,q_auto,w_1200/") : project.mediaSrc} 
@@ -166,17 +202,26 @@ export default function Work() {
                       gap: "0.4rem",
                       background: "rgba(0,0,0,0.55)",
                       backdropFilter: "blur(8px)",
-                      border: "1px solid rgba(0,210,255,0.25)",
+                      border: isVideo ? "1px solid rgba(0,210,255,0.4)" : "1px solid rgba(255,255,255,0.15)",
                       borderRadius: "20px",
                       padding: "0.3rem 0.75rem",
                       fontSize: "0.72rem",
-                      color: "rgba(0,210,255,0.9)",
+                      color: isVideo ? "rgba(0,210,255,0.9)" : "rgba(255,255,255,0.9)",
                       fontWeight: 600,
                       letterSpacing: "0.05em"
                     }}
                   >
-                    <Images size={12} />
-                    {(project.galleryImages?.length ?? 0) + (project.mediaSrc && project.mediaType === "image" ? 1 : 0)} Photos
+                    {isVideo ? (
+                      <>
+                        <Video size={12} />
+                        Play Video
+                      </>
+                    ) : (
+                      <>
+                        <Images size={12} />
+                        {(project.galleryImages?.length ?? 0) + (project.mediaSrc ? 1 : 0)} Photos
+                      </>
+                    )}
                   </motion.div>
                 )}
 
@@ -212,8 +257,17 @@ export default function Work() {
                         textTransform: "uppercase"
                       }}
                     >
-                      <Images size={13} />
-                      View Gallery
+                      {isVideo ? (
+                        <>
+                          <Video size={13} />
+                          Play Cinematic
+                        </>
+                      ) : (
+                        <>
+                          <Images size={13} />
+                          View Gallery
+                        </>
+                      )}
                     </motion.div>
                   )}
                 </div>

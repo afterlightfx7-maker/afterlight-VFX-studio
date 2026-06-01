@@ -135,8 +135,8 @@ export default function AdminProjects() {
               position: "relative"
             }}>
               {project.mediaSrc ? (
-                project.mediaType === 'video' ? (
-                  <video src={project.mediaSrc} muted loop style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                (project.mediaType === 'video' || project.mediaSrc.includes('/video/') || project.mediaSrc.match(/\.(mp4|webm|ogg|mov|m4v)($|\?)/i) || project.mediaSrc.startsWith('data:video/')) ? (
+                  <video src={project.mediaSrc} muted loop autoPlay playsInline style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : (
                   <img src={project.mediaSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 )

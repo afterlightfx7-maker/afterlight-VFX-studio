@@ -15,15 +15,31 @@ export default function ProjectGalleryLightbox({ project, onClose }: ProjectGall
   const [direction, setDirection] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
-  // Build image list: main mediaSrc (if image) + galleryImages
-  const images: string[] = project
+  // Build media items list: main mediaSrc (image or video) + galleryImages
+  const mediaItems = project
     ? [
-        ...(project.mediaSrc && project.mediaType === "image" ? [project.mediaSrc] : []),
-        ...(project.galleryImages ?? [])
+        ...(project.mediaSrc
+          ? [
+              {
+                src: project.mediaSrc,
+                type:
+                  project.mediaType === "video" ||
+                  project.mediaSrc.includes("/video/") ||
+                  project.mediaSrc.match(/\.(mp4|webm|ogg|mov|m4v)($|\?)/i) ||
+                  project.mediaSrc.startsWith("data:video/")
+                    ? ("video" as const)
+                    : ("image" as const),
+              },
+            ]
+          : []),
+        ...(project.galleryImages ?? []).map((url) => ({
+          src: url,
+          type: "image" as const,
+        })),
       ]
     : [];
 
-  const totalImages = images.length;
+  const totalImages = mediaItems.length;
 
   const goNext = useCallback(() => {
     if (totalImages <= 1) return;
@@ -174,25 +190,49 @@ export default function ProjectGalleryLightbox({ project, onClose }: ProjectGall
             }}>
               {totalImages > 0 ? (
                 <AnimatePresence custom={direction} initial={false} mode="wait">
-                  <motion.img
-                    key={currentIndex}
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                    src={images[currentIndex]}
-                    alt={`${project.title} — image ${currentIndex + 1}`}
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      objectPosition: "center"
-                    }}
-                  />
+                  {mediaItems[currentIndex].type === "video" ? (
+                    <motion.video
+                      key={currentIndex}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      src={mediaItems[currentIndex].src}
+                      controls
+                      autoPlay
+                      playsInline
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center"
+                      }}
+                    />
+                  ) : (
+                    <motion.img
+                      key={currentIndex}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      src={mediaItems[currentIndex].src}
+                      alt={`${project.title} — asset ${currentIndex + 1}`}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center"
+                      }}
+                    />
+                  )}
                 </AnimatePresence>
               ) : (
                 <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.15)", fontSize: "1rem" }}>
@@ -261,11 +301,11 @@ export default function ProjectGalleryLightbox({ project, onClose }: ProjectGall
                 paddingBottom: "0.25rem",
                 scrollbarWidth: "none"
               }}>
-                {images.map((src, idx) => (
+                {mediaItems.map((item, idx) => (
                   <button
                     key={idx}
                     onClick={() => { setDirection(idx > currentIndex ? 1 : -1); setCurrentIndex(idx); }}
-                    aria-label={`View image ${idx + 1}`}
+                    aria-label={`View asset ${idx + 1}`}
                     style={{
                       flexShrink: 0,
                       width: "72px",
@@ -282,11 +322,19 @@ export default function ProjectGalleryLightbox({ project, onClose }: ProjectGall
                       transform: idx === currentIndex ? "scale(1.05)" : "scale(1)"
                     }}
                   >
-                    <img
-                      src={src}
-                      alt={`Thumb ${idx + 1}`}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
+                    {item.type === "video" ? (
+                      <video
+                        src={item.src}
+                        muted
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    ) : (
+                      <img
+                        src={item.src}
+                        alt={`Thumb ${idx + 1}`}
+                        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      />
+                    )}
                   </button>
                 ))}
               </div>
@@ -295,7 +343,7 @@ export default function ProjectGalleryLightbox({ project, onClose }: ProjectGall
             {/* Dot indicators */}
             {totalImages > 1 && (
               <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
-                {images.map((_, idx) => (
+                {mediaItems.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => { setDirection(idx > currentIndex ? 1 : -1); setCurrentIndex(idx); }}

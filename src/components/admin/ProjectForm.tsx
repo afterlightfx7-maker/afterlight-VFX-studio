@@ -86,7 +86,12 @@ export default function ProjectForm({ initialData, onSubmit, title }: ProjectFor
     setIsUploading(true);
     try {
       const url = await uploadFile(file);
-      setFormData(prev => ({ ...prev, mediaSrc: url }));
+      const isVideo = file.type.startsWith("video/");
+      setFormData(prev => ({ 
+        ...prev, 
+        mediaSrc: url,
+        mediaType: isVideo ? "video" : "image"
+      }));
     } catch (err: any) {
       alert(`Upload failed: ${err.message}`);
     } finally {
@@ -272,9 +277,9 @@ export default function ProjectForm({ initialData, onSubmit, title }: ProjectFor
                 }}
               >
                 <Upload size={17} />
-                Upload Cover {formData.mediaType === "image" ? "Image" : "Video"}
+                Upload Cover Image / Video
               </button>
-              <input id="main-file-upload" type="file" accept={formData.mediaType === "image" ? "image/*" : "video/*"}
+              <input id="main-file-upload" type="file" accept="image/*,video/*"
                 onChange={handleMainUpload} style={{ display: "none" }} />
 
               {isUploading && (
