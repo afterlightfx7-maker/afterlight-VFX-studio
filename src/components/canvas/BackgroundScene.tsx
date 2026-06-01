@@ -10,7 +10,7 @@ function Starfield() {
   const ref = useRef<THREE.Points>(null!);
 
   const [sphere] = useState(() => {
-    const count = 3000;
+    const count = 2000;
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
@@ -25,8 +25,8 @@ function Starfield() {
 
   useFrame((_state, delta) => {
     if (ref.current) {
-      ref.current.rotation.x -= delta / 18;
-      ref.current.rotation.y -= delta / 24;
+      ref.current.rotation.x -= delta / 10;
+      ref.current.rotation.y -= delta / 15;
     }
   });
 
@@ -35,22 +35,13 @@ function Starfield() {
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
         <PointMaterial
           transparent
-          color="#a0c8ff"
-          size={0.0045}
+          color="#00d2ff"
+          size={0.005}
           sizeAttenuation
           depthWrite={false}
         />
       </Points>
     </group>
-  );
-}
-
-// ─── Scene root ───────────────────────────────────────────────────────────────
-function Scene() {
-  return (
-    <>
-      <Starfield />
-    </>
   );
 }
 
@@ -84,9 +75,9 @@ export default function BackgroundScene() {
           opacity: 0.95,
         }}
       >
-        <Canvas camera={{ position: [0, 0, 2.8], fov: 55 }}>
+        <Canvas camera={{ position: [0, 0, 1] }}>
           <Suspense fallback={null}>
-            <Scene />
+            <Starfield />
           </Suspense>
         </Canvas>
       </div>
