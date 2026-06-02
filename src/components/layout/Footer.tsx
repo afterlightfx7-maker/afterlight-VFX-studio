@@ -61,9 +61,14 @@ export default function Footer() {
         <span style={{ color: "var(--color-text-muted)", fontSize: "0.75rem" }}>
           &copy; {new Date().getFullYear()} AfterLightFX Studios. All rights reserved.
         </span>
-        <span style={{ color: "var(--color-text-muted)", fontSize: "0.75rem" }}>
-          Designed with precision. • <a href="/admin/login" style={{ color: "inherit", textDecoration: "none", opacity: 0.5 }}>Admin</a>
-        </span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }} className="footer-designer-wrapper">
+          <span style={{ color: "var(--color-text-muted)", fontSize: "0.5rem", opacity: 0.3, letterSpacing: "0.15em", lineHeight: 1 }}>
+            .- -..
+          </span>
+          <span style={{ color: "var(--color-text-muted)", fontSize: "0.75rem" }}>
+            Designed with precision. • <a href="/admin/login" style={{ color: "inherit", textDecoration: "none", opacity: 0.5 }}>Admin</a>
+          </span>
+        </div>
       </div>
     </footer>
   );
